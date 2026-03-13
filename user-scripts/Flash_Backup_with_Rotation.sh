@@ -82,13 +82,14 @@ LINK=""
 # --------------------------
 # Perform Incremental Backup
 # --------------------------
-rsync -rt 
+rsync -rt \
 --delete-delay \
 --modify-window=1 \
 --delay-updates \
 --numeric-ids \
+--itemize-changes \
 "${EXCLUDES[@]}" \
-$LINK \
+${LINK:+$LINK} \
 "$SOURCE" "$DEST/daily.0" >> "$LOG" 2>&1
 
 # --------------------------
