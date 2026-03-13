@@ -32,6 +32,7 @@ EXCLUDES=(
     "--exclude=config/super.dat"
     "--exclude=config/plugins-error.log"
     "--exclude=*.log"
+    "--exclude=previous/"
 )
 # --- -----------------
 
@@ -132,6 +133,9 @@ if [ -z "$KEYFILE" ]; then
 fi
 
 echo "$(date) Flash backup complete" >> "$LOG"
+
+# Fix permissions for SMB access
+newperms "$DEST"
 
 "$NOTIFY" \
     -i normal \
