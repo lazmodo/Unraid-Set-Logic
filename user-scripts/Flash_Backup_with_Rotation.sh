@@ -40,6 +40,14 @@ EXCLUDES=(
 exec 200>"$LOCK_FILE"
 flock -n 200 || exit 1
 
+# Verify Flash drive is actually mounted
+if ! mountpoint -q /boot; then
+    echo "$(date "+%Y-%m-%d %H:%M:%S") [ERROR]: /boot is not a valid mountpoint. Backup aborted." >> "$LOG"
+    /usr/local/emhttp/webGui/scripts/notify -i alert -s "Flash Backup Failed" -d "/boot is not mounted"
+    exit 1
+fi
+
+
 echo "$(date) Starting flash backup" >> "$LOG"
 
 mkdir -p "$DEST"
@@ -74,7 +82,8 @@ LINK=""
 # --------------------------
 # Perform Incremental Backup
 # --------------------------
-rsync -rt --delete \
+rsync -rt 
+--delete-delay \
 --modify-window=1 \
 --delay-updates \
 --numeric-ids \
